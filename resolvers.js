@@ -1,34 +1,23 @@
-const posts = [
-  
-  {
-    "userId": 1,
-    "id": 1,
-    "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-    "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+import mongoose from "mongoose";
+import postModel from "./models/post.js";
+const resolvers = {
+  Query: {
+    posts: () => {
+      return posts;
     },
-    {
-    "userId": 1,
-    "id": 2,
-    "title": "qui est esse",
-    "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
+    post: (root, args) => {
+      const title = args.title;
+      return posts.find(post => post.title === title);
+    }
+  },
+  Mutation: {
+    addPost: (root, { title, body }) => {
+      const post = new postModel({ title: title, body: body });
+      return post.save();
     },
-    {
-    "userId": 1,
-    "id": 3,
-    "title": "ea molestias quasi exercitationem repellat qui ipsa sit aut",
-    "body":"ahmed"
+    deletePost: (root, { id }) => {
+      return postModel.remove({ id: id });
     }
-
-  ]
-    const resolvers = {
-      Query:{
-        posts:()=>{
-          return posts
-        },
-        post:(root, args)=>{
-          const title = args.title
-          return posts.find(post=>post.title === title)
-        }
-      }
-    }
-export default resolvers
+  }
+};
+export default resolvers;
